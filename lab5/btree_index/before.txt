@@ -1,0 +1,5 @@
+Seq Scan on customer  (cost=0.00..4562.00 rows=18561 width=213) (actual time=0.005..10.500 rows=18741 loops=1)
+  Filter: ((age > 10) AND (age < 30))
+  Rows Removed by Filter: 81259
+Planning Time: 0.219 ms
+Execution Time: 10.933 ms

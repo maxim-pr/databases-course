@@ -1,0 +1,7 @@
+Bitmap Heap Scan on customer  (cost=398.67..3739.08 rows=18561 width=213) (actual time=1.515..6.259 rows=18741 loops=1)
+  Recheck Cond: ((age > 10) AND (age < 30))
+  Heap Blocks: exact=3057
+  ->  Bitmap Index Scan on age_index  (cost=0.00..394.03 rows=18561 width=0) (actual time=1.244..1.244 rows=18741 loops=1)
+        Index Cond: ((age > 10) AND (age < 30))
+Planning Time: 0.291 ms
+Execution Time: 6.715 ms
