@@ -1,0 +1,5 @@
+Seq Scan on customer  (cost=0.00..4562.00 rows=4 width=213) (actual time=8.584..10.721 rows=2 loops=1)
+  Filter: (((name)::text = 'Lisa Trujillo'::text) OR ((name)::text = 'Shane Thomas'::text))
+  Rows Removed by Filter: 99998
+Planning Time: 0.084 ms
+Execution Time: 10.728 ms
