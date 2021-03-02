@@ -29,3 +29,4 @@
  Execution Time: 34.498 ms
 (27 rows)
 
+Scan is expensive operation, so indexes on some of the columns can increase performance

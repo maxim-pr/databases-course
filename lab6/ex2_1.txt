@@ -50,3 +50,5 @@
  Execution Time: 580.170 ms
 (48 rows)
 
+
+Joins and scans are expensive operations, so creating indexes on some of the columns can increase performance 
