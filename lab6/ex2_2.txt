@@ -1,0 +1,31 @@
+                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ GroupAggregate  (cost=401.98..801.99 rows=1 width=36) (actual time=34.199..34.236 rows=2 loops=1)
+   Group Key: store.store_id
+   InitPlan 1 (returns $0,$1)
+     ->  Limit  (cost=399.92..399.92 rows=1 width=64) (actual time=24.740..24.741 rows=1 loops=1)
+           ->  Sort  (cost=399.92..436.41 rows=14596 width=64) (actual time=24.738..24.739 rows=1 loops=1)
+                 Sort Key: (to_char(payment_1.payment_date, 'YYYY'::text)) DESC, (to_char(payment_1.payment_date, 'MM'::text)) DESC
+                 Sort Method: top-N heapsort  Memory: 25kB
+                 ->  Seq Scan on payment payment_1  (cost=0.00..326.94 rows=14596 width=64) (actual time=0.021..18.126 rows=14596 loops=1)
+   ->  Nested Loop  (cost=2.06..402.05 rows=1 width=10) (actual time=34.024..34.205 rows=182 loops=1)
+         Join Filter: (staff.staff_id = payment.staff_id)
+         Rows Removed by Join Filter: 182
+         ->  Merge Join  (cost=2.06..2.10 rows=2 width=8) (actual time=0.124..0.127 rows=2 loops=1)
+               Merge Cond: (store.store_id = staff.store_id)
+               ->  Sort  (cost=1.03..1.03 rows=2 width=4) (actual time=0.051..0.052 rows=2 loops=1)
+                     Sort Key: store.store_id
+                     Sort Method: quicksort  Memory: 25kB
+                     ->  Seq Scan on store  (cost=0.00..1.02 rows=2 width=4) (actual time=0.009..0.011 rows=2 loops=1)
+               ->  Sort  (cost=1.03..1.03 rows=2 width=6) (actual time=0.061..0.061 rows=2 loops=1)
+                     Sort Key: staff.store_id
+                     Sort Method: quicksort  Memory: 25kB
+                     ->  Seq Scan on staff  (cost=0.00..1.02 rows=2 width=6) (actual time=0.007..0.008 rows=2 loops=1)
+         ->  Materialize  (cost=0.00..399.93 rows=1 width=8) (actual time=16.946..17.020 rows=182 loops=2)
+               ->  Seq Scan on payment  (cost=0.00..399.92 rows=1 width=8) (actual time=33.884..33.988 rows=182 loops=1)
+                     Filter: ((to_char(payment_date, 'YYYY'::text) = $0) AND (to_char(payment_date, 'MM'::text) = $1))
+                     Rows Removed by Filter: 14414
+ Planning Time: 2.001 ms
+ Execution Time: 34.498 ms
+(27 rows)
+

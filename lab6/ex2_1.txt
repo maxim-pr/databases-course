@@ -1,0 +1,52 @@
+                                                                              QUERY PLAN                                                                               
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Hash Join  (cost=87147.10..100321.44 rows=25607 width=28) (actual time=335.534..525.505 rows=33781 loops=1)
+   Hash Cond: (subq.customer_id = c.customer_id)
+   ->  Hash Join  (cost=87124.62..100231.27 rows=25607 width=19) (actual time=310.963..496.326 rows=33781 loops=1)
+         Hash Cond: (subq.film_id = f.film_id)
+         ->  Subquery Scan on subq  (cost=87030.82..97633.65 rows=599000 width=8) (actual time=310.613..464.503 rows=583172 loops=1)
+               ->  SetOp Except  (cost=87030.82..91643.65 rows=599000 width=12) (actual time=310.612..432.501 rows=583172 loops=1)
+                     ->  Sort  (cost=87030.82..88568.43 rows=615044 width=12) (actual time=310.603..369.528 rows=615044 loops=1)
+                           Sort Key: "*SELECT* 1".customer_id, "*SELECT* 1".film_id
+                           Sort Method: external merge  Disk: 13296kB
+                           ->  Append  (cost=0.00..17379.32 rows=615044 width=12) (actual time=0.010..124.978 rows=615044 loops=1)
+                                 ->  Subquery Scan on "*SELECT* 1"  (cost=0.00..13557.99 rows=599000 width=12) (actual time=0.009..92.117 rows=599000 loops=1)
+                                       ->  Nested Loop  (cost=0.00..7567.99 rows=599000 width=8) (actual time=0.009..59.087 rows=599000 loops=1)
+                                             ->  Seq Scan on film  (cost=0.00..64.00 rows=1000 width=4) (actual time=0.002..0.214 rows=1000 loops=1)
+                                             ->  Materialize  (cost=0.00..17.98 rows=599 width=4) (actual time=0.000..0.020 rows=599 loops=1000)
+                                                   ->  Seq Scan on customer  (cost=0.00..14.99 rows=599 width=4) (actual time=0.003..0.046 rows=599 loops=1)
+                                 ->  Subquery Scan on "*SELECT* 2"  (cost=150.55..746.12 rows=16044 width=12) (actual time=0.813..7.188 rows=16044 loops=1)
+                                       ->  Hash Join  (cost=150.55..545.57 rows=16044 width=6) (actual time=0.812..6.211 rows=16044 loops=1)
+                                             Hash Cond: (r.inventory_id = i.inventory_id)
+                                             ->  Hash Join  (cost=22.48..375.33 rows=16044 width=8) (actual time=0.117..3.573 rows=16044 loops=1)
+                                                   Hash Cond: (r.customer_id = c_1.customer_id)
+                                                   ->  Seq Scan on rental r  (cost=0.00..310.44 rows=16044 width=6) (actual time=0.006..1.076 rows=16044 loops=1)
+                                                   ->  Hash  (cost=14.99..14.99 rows=599 width=4) (actual time=0.101..0.101 rows=599 loops=1)
+                                                         Buckets: 1024  Batches: 1  Memory Usage: 30kB
+                                                         ->  Seq Scan on customer c_1  (cost=0.00..14.99 rows=599 width=4) (actual time=0.012..0.054 rows=599 loops=1)
+                                             ->  Hash  (cost=70.81..70.81 rows=4581 width=6) (actual time=0.688..0.689 rows=4581 loops=1)
+                                                   Buckets: 8192  Batches: 1  Memory Usage: 243kB
+                                                   ->  Seq Scan on inventory i  (cost=0.00..70.81 rows=4581 width=6) (actual time=0.006..0.326 rows=4581 loops=1)
+         ->  Hash  (cost=93.26..93.26 rows=43 width=21) (actual time=0.340..0.341 rows=58 loops=1)
+               Buckets: 1024  Batches: 1  Memory Usage: 12kB
+               ->  Hash Join  (cost=22.43..93.26 rows=43 width=21) (actual time=0.108..0.331 rows=58 loops=1)
+                     Hash Cond: (f.film_id = fc.film_id)
+                     ->  Seq Scan on film f  (cost=0.00..69.00 rows=375 width=19) (actual time=0.006..0.200 rows=418 loops=1)
+                           Filter: ((rating = 'R'::mpaa_rating) OR (rating = 'PG-13'::mpaa_rating))
+                           Rows Removed by Filter: 582
+                     ->  Hash  (cost=21.00..21.00 rows=114 width=2) (actual time=0.080..0.080 rows=117 loops=1)
+                           Buckets: 1024  Batches: 1  Memory Usage: 12kB
+                           ->  Seq Scan on film_category fc  (cost=0.00..21.00 rows=114 width=2) (actual time=0.009..0.068 rows=117 loops=1)
+                                 Filter: ((category_id = 11) OR (category_id = 14))
+                                 Rows Removed by Filter: 883
+   ->  Hash  (cost=14.99..14.99 rows=599 width=17) (actual time=24.547..24.547 rows=599 loops=1)
+         Buckets: 1024  Batches: 1  Memory Usage: 39kB
+         ->  Seq Scan on customer c  (cost=0.00..14.99 rows=599 width=17) (actual time=24.407..24.470 rows=599 loops=1)
+ Planning Time: 4.886 ms
+ JIT:
+   Functions: 58
+   Options: Inlining false, Optimization false, Expressions true, Deforming true
+   Timing: Generation 5.064 ms, Inlining 0.000 ms, Optimization 1.231 ms, Emission 22.871 ms, Total 29.166 ms
+ Execution Time: 580.170 ms
+(48 rows)
+
