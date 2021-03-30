@@ -1,0 +1,33 @@
+// Find all the documents in the collection restaurants
+db.restaurant.find({})
+
+
+// Find the fields restaurant_id, name, borough and cuisine for all the documents in the collection restaurant
+db.restaurant.find({}, {restaurant_id: 1, name: 1, borough: 1, cuisine: 1})
+
+
+// Find the first 5 restaurant which is in the borough Bronx.
+db.restaurant.find({borough: "Bronx"}).limit(5)
+
+
+// Find the restaurant Id, name, borough and cuisine for those restaurants which
+// prepared dish except 'American' and 'Chinees' or restaurant's name begins with letter 'Wil’
+db.restaurant.find({
+  $or: [ {cuisine: {$nin: ["American ", "Chinese"]}}, {name: /^Wil/ } ]
+})
+
+
+// Find the restaurant name, borough, longitude and attitude and cuisine for those
+// restaurants which contains 'mon' as three letters somewhere in its name
+db.restaurant.find(
+    {name: /mon/}, 
+    {name: 1, borough: 1, address: {coord: 1}, cuisine: 1}
+)
+
+
+// Find the restaurant Id, name, borough and cuisine for those restaurants which
+// belong to the borough Staten Island or Queens or Bronx or Brooklyn
+db.restaurant.find(
+    {borough: {$in: ["Staten Island", "Queens", "Bronx", "Brooklyn"]}}, 
+    {restaurant_id: 1, name: 1, borough: 1, cuisine: 1}
+)
