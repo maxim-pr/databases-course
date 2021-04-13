@@ -1,0 +1,76 @@
+CREATE (f1:Fighter {name: 'Khabib Nurmagomedov', weight: 155}),
+	   (f2:Fighter {name: 'Rafael Dos Anjos', weight: 155}),
+       (f3:Fighter {name: 'Neil Magny', weight: 170}),
+       (f4:Fighter {name: 'Jon Jones', weight: 205}),
+       (f5:Fighter {name: 'Daniel Cormier', weight: 205}),
+       (f6:Fighter {name: 'Michael Bispring', weight: 185}),
+       (f7:Fighter {name: 'Matt Hamill', weight: 185}),
+       (f8:Fighter {name: 'Brandon Vera', weight: 205}),
+       (f9:Fighter {name: 'Frank Mir', weight: 230}),
+       (f10:Fighter {name: 'Brock Lesnar', weight: 230}),
+       (f11:Fighter {name: 'Kelvin Gastelum', weight: 185}),
+       (f1)-[:beats]->(f2),
+       (f2)-[:beats]->(f3),
+       (f4)-[:beats]->(f5),
+       (f6)-[:beats]->(f7),
+       (f4)-[:beats]->(f8),
+       (f8)-[:beats]->(f9),
+       (f9)-[:beats]->(f10),
+       (f3)-[:beats]->(f11),
+       (f11)-[:beats]->(f6),
+       (f6)-[:beats]->(f11),
+       (f7)-[:beats]->(f4)
+
+
+0) Return all fighters
+
+MATCH (f:Fighter)
+RETURN f
+
+
+1) Return all middle/Walter/lightweight fighters (155,170,185) who at least have one win
+
+MATCH (f1:Fighter)-[:beats]->(f2:Fighter)
+	WHERE f1.weight in [155, 170, 185]
+RETURN f1
+
+
+2) Return fighters who had 1-1 record with each other. Use Count from the aggregation functions
+
+MATCH (f1:Fighter)-[:beats]->(f2:Fighter)
+WHERE (f2)-[:beats]->(f1)
+WITH f1, COUNT(f1) AS count
+WHERE count = 1
+RETURN f1, count
+
+
+3) Return all fighters whom “KhabibNurmagomedov” can beat and didn’t have a fight with yet
+
+MATCH (f1:Fighter)-[:beats*2..]->(f2:Fighter)
+WHERE f1.name = 'Khabib Nurmagomedov'
+RETURN f2
+
+
+4.1) Return undefeated fighters(0 loss) 
+
+MATCH (f:Fighter)
+WHERE NOT ()-[:beats]->(f)
+RETURN f
+
+
+4.2) Return defeated fighter (0 wins)
+
+MATCH (f:Fighter)
+WHERE NOT ()<-[:beats]-(f)
+RETURN f
+
+
+5) Return all fighters MMA records and create query to enter the record as a property for a fighter {name, weight, record}
+
+MATCH (f1:Fighter)-[:beats]->(f2:Fighter)
+WITH f1, COUNT(f2) AS count
+SET f1.record = count
+
+MATCH (f1:Fighter)-[:beats]->(f2:Fighter)
+WITH f1, COUNT(f2) AS count
+SET f1.record = count
