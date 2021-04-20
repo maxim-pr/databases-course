@@ -1,0 +1,15 @@
+HMSET customer:1 numb 1 first_name Jane last_name Doe
+HMSET customer:2 numb 2 first_name John last_name Doe
+HMSET customer:3 numb 3 first_name Jane last_name Smith
+HMSET customer:4 numb 4 first_name John last_name Smith
+HMSET customer:5 numb 5 first_name Jane last_name Jones
+HMSET customer:6 numb 6 first_name John last_name Jones
+
+HMSET order:1 numb 1001 customer_numb 1 order_date 10/10/09 order_total 250.85
+HMSET order:2 numb 1002 customer_numb 2 order_date 2/21/10 order_total 125.89
+HMSET order:3 numb 1003 customer_numb 3 order_date 11/15/09 order_total 1567.99
+HMSET order:4 numb 1004 customer_numb 4 order_date 11/22/09 order_total 180.92
+HMSET order:5 numb 1005 customer_numb 4 order_date 12/15/09 order_total 565.00
+HMSET order:6 numb 1006 customer_numb 6 order_date 11/22/09 order_total 25.00
+HMSET order:7 numb 1007 customer_numb 6 order_date 10/8/09 order_total 85.00
+HMSET order:8 numb 1008 customer_numb 6 order_date 12/29/09 order_total 109.12
